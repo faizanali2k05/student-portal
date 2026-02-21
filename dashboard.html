@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Student Dashboard - View your attendance records and statistics">
+    <title>Student Portal — Dashboard</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>">
+</head>
+
+<body>
+
+    <!-- Page Loader -->
+    <div class="page-loader" id="pageLoader">
+        <div class="loader-spinner"></div>
+        <div class="loader-text">Loading dashboard...</div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Mobile Hamburger -->
+    <button class="mobile-hamburger" id="hamburger" onclick="toggleSidebar()">☰</button>
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-logo">
+                <div class="sidebar-logo-icon">🎓</div>
+                <span class="sidebar-logo-text">Student Portal</span>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-item active">
+                    <span class="nav-icon">📊</span>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" class="nav-item" onclick="scrollToChart()">
+                    <span class="nav-icon">📈</span>
+                    <span>Charts</span>
+                </a>
+                <a href="#" class="nav-item" onclick="scrollToTable()">
+                    <span class="nav-icon">📋</span>
+                    <span>Records</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <div class="user-avatar" id="userAvatar">S</div>
+                    <div class="user-details">
+                        <div class="user-name" id="userName">Student</div>
+                        <div class="user-role">Student</div>
+                    </div>
+                </div>
+                <button class="nav-item" onclick="logout()" style="margin-top:8px; color: var(--danger);">
+                    <span class="nav-icon">🚪</span>
+                    <span>Logout</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="page-header fade-in">
+                <h1 class="page-title">Welcome back, <span id="greetName">Student</span> 👋</h1>
+                <p class="page-subtitle">Here's your attendance overview</p>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="stats-grid">
+                <div class="stat-card purple fade-in stagger-1">
+                    <div class="stat-icon">📅</div>
+                    <div class="stat-value" id="totalDays">0</div>
+                    <div class="stat-label">Total Days</div>
+                </div>
+                <div class="stat-card green fade-in stagger-2">
+                    <div class="stat-icon">✅</div>
+                    <div class="stat-value" id="presentDays">0</div>
+                    <div class="stat-label">Present</div>
+                </div>
+                <div class="stat-card red fade-in stagger-3">
+                    <div class="stat-icon">❌</div>
+                    <div class="stat-value" id="absentDays">0</div>
+                    <div class="stat-label">Absent</div>
+                </div>
+                <div class="stat-card yellow fade-in stagger-4">
+                    <div class="stat-icon">📊</div>
+                    <div class="stat-value" id="percentage">0%</div>
+                    <div class="stat-label">Attendance</div>
+                </div>
+            </div>
+
+            <!-- Attendance Percentage Circle & Chart Row -->
+            <div class="admin-grid" style="margin-bottom: 32px;">
+                <!-- Percentage Circle -->
+                <div class="card fade-in" id="percentageCard">
+                    <div class="card-header">
+                        <h2 class="card-title">📊 Attendance Rate</h2>
+                    </div>
+                    <div class="card-body" style="text-align: center;">
+                        <div class="percentage-circle">
+                            <svg width="120" height="120" viewBox="0 0 120 120">
+                                <circle class="circle-bg" cx="60" cy="60" r="52" />
+                                <circle class="circle-fill" cx="60" cy="60" r="52" id="progressCircle"
+                                    stroke="url(#grad)" stroke-dasharray="326.73" stroke-dashoffset="326.73" />
+                                <defs>
+                                    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                        <stop offset="0%" style="stop-color:#6366f1" />
+                                        <stop offset="100%" style="stop-color:#10b981" />
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                            <span class="percentage-value" id="circlePercent">0%</span>
+                        </div>
+                        <p class="percentage-label">Overall Attendance</p>
+                        <div class="progress-bar" style="margin-top: 20px;">
+                            <div class="progress-fill green" id="progressBar" style="width: 0%;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chart -->
+                <div class="card fade-in" id="chartCard">
+                    <div class="card-header">
+                        <h2 class="card-title">📈 Monthly Breakdown</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-wrapper">
+                            <canvas id="attendanceChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Attendance Records Table -->
+            <div class="card fade-in" id="tableCard">
+                <div class="card-header">
+                    <h2 class="card-title">📋 Attendance Records</h2>
+                    <div style="display:flex; gap:8px; align-items:center;">
+                        <select class="form-control" id="monthFilter" onchange="filterByMonth()">
+                            <option value="">All Months</option>
+                            <option value="01">January</option>
+                            <option value="02">February</option>
+                            <option value="03">March</option>
+                            <option value="04">April</option>
+                            <option value="05">May</option>
+                            <option value="06">June</option>
+                            <option value="07">July</option>
+                            <option value="08">August</option>
+                            <option value="09">September</option>
+                            <option value="10">October</option>
+                            <option value="11">November</option>
+                            <option value="12">December</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Date</th>
+                                    <th>Day</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="attendanceBody">
+                                <tr>
+                                    <td colspan="4">
+                                        <div class="empty-state">
+                                            <div class="empty-state-icon">📭</div>
+                                            <div class="empty-state-title">No records yet</div>
+                                            <div class="empty-state-desc">Your attendance records will appear here once
+                                                your teacher marks them.</div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/supabaseClient.js"></script>
+    <script src="js/student.js"></script>
+</body>
+
+</html>

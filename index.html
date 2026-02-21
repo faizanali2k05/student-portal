@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Student Portal - Secure attendance management system for students and teachers">
+  <title>Student Portal — Login</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>">
+</head>
+<body>
+
+  <!-- Page Loader -->
+  <div class="page-loader" id="pageLoader">
+    <div class="loader-spinner"></div>
+    <div class="loader-text">Loading...</div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <div class="auth-container">
+    <div class="auth-card">
+      <div class="auth-logo">🎓</div>
+      <h1 class="auth-title">Student Portal</h1>
+      <p class="auth-subtitle">Manage your attendance with ease</p>
+
+      <!-- Tabs -->
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="loginTab" onclick="switchTab('login')">Login</button>
+        <button class="auth-tab" id="signupTab" onclick="switchTab('signup')">Sign Up</button>
+      </div>
+
+      <!-- Messages -->
+      <div class="error-message" id="errorMsg"></div>
+      <div class="success-message" id="successMsg"></div>
+
+      <!-- Login Form -->
+      <form id="loginForm" onsubmit="handleLogin(event)">
+        <div class="form-group">
+          <label for="loginEmail">Email Address</label>
+          <input type="email" id="loginEmail" placeholder="you@example.com" required>
+          <span class="input-icon">📧</span>
+        </div>
+        <div class="form-group">
+          <label for="loginPassword">Password</label>
+          <input type="password" id="loginPassword" placeholder="••••••••" required minlength="6">
+          <span class="input-icon">🔒</span>
+        </div>
+        <button type="submit" class="btn-primary" id="loginBtn">
+          <span class="btn-text">Sign In</span>
+          <span class="spinner"></span>
+        </button>
+      </form>
+
+      <!-- Signup Form -->
+      <form id="signupForm" style="display:none;" onsubmit="handleSignup(event)">
+        <div class="form-group">
+          <label for="signupName">Full Name</label>
+          <input type="text" id="signupName" placeholder="John Doe" required>
+          <span class="input-icon">👤</span>
+        </div>
+        <div class="form-group">
+          <label for="signupEmail">Email Address</label>
+          <input type="email" id="signupEmail" placeholder="you@example.com" required>
+          <span class="input-icon">📧</span>
+        </div>
+        <div class="form-group">
+          <label for="signupPassword">Password</label>
+          <input type="password" id="signupPassword" placeholder="Min 6 characters" required minlength="6">
+          <span class="input-icon">🔒</span>
+        </div>
+        <button type="submit" class="btn-primary" id="signupBtn">
+          <span class="btn-text">Create Account</span>
+          <span class="spinner"></span>
+        </button>
+      </form>
+
+      <div class="auth-footer" id="authFooter">
+        Don't have an account? <a href="#" onclick="switchTab('signup')">Sign up</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <script src="js/supabaseClient.js"></script>
+  <script src="js/auth.js"></script>
+</body>
+</html>
