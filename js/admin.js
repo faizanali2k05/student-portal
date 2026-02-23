@@ -9,14 +9,13 @@ let adminChart = null;
 // ===== TOAST NOTIFICATIONS =====
 function showToast(message, type = 'info') {
     const container = document.getElementById('toastContainer');
-    const icons = { success: '✅', error: '❌', info: 'ℹ️' };
+    const icons = { success: '✓', error: '✗', info: 'ℹ' };
     const toast = document.createElement('div');
     toast.className = `toast toast-${type}`;
     toast.innerHTML = `
     <span class="toast-icon">${icons[type]}</span>
     <span>${message}</span>
-    <button class="toast-close" onclick="this.parentElement.remove()">✕</button>
-  `;
+    <button class="toast-close" onclick="this.parentElement.remove()">×</button>`;
     container.appendChild(toast);
     setTimeout(() => {
         toast.style.animation = 'toastOut 0.3s ease forwards';
@@ -138,7 +137,7 @@ function renderStudentList() {
     if (students.length === 0) {
         container.innerHTML = `
       <div class="empty-state">
-        <div class="empty-state-icon">👥</div>
+        <div class="empty-state-icon icon-users"></div>
         <div class="empty-state-title">No students found</div>
         <div class="empty-state-desc">Students will appear here once they sign up.</div>
       </div>
@@ -162,11 +161,11 @@ function renderStudentList() {
         <div class="status-toggle">
           <button class="status-btn ${status === 'Present' ? 'present-active' : ''}"
             onclick="toggleStatus('${student.id}', 'Present')">
-            ✅ Present
+            ✓ Present
           </button>
           <button class="status-btn ${status === 'Absent' ? 'absent-active' : ''}"
             onclick="toggleStatus('${student.id}', 'Absent')">
-            ❌ Absent
+            ✗ Absent
           </button>
         </div>
       </div>
@@ -284,7 +283,7 @@ function renderRecords(records) {
       <tr>
         <td colspan="5">
           <div class="empty-state">
-            <div class="empty-state-icon">📭</div>
+            <div class="empty-state-icon icon-inbox"></div>
             <div class="empty-state-title">No records found</div>
             <div class="empty-state-desc">Try adjusting your filters or mark attendance first.</div>
           </div>
@@ -320,7 +319,7 @@ function renderRecords(records) {
         </td>
         <td>
           <button class="btn btn-ghost btn-sm" onclick="openDeleteModal('${row.id}')" title="Delete">
-            🗑️
+            🗑
           </button>
         </td>
       </tr>

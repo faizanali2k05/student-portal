@@ -6,7 +6,7 @@ let attendanceChart = null;
 // ===== TOAST NOTIFICATIONS =====
 function showToast(message, type = 'info') {
     const container = document.getElementById('toastContainer');
-    const icons = { success: '✅', error: '❌', info: 'ℹ️' };
+    const icons = { success: '✓', error: '✗', info: 'ℹ' };
     const toast = document.createElement('div');
     toast.className = `toast toast-${type}`;
     toast.innerHTML = `
@@ -184,7 +184,7 @@ function renderTable(data) {
       <tr>
         <td colspan="4">
           <div class="empty-state">
-            <div class="empty-state-icon">📭</div>
+            <div class="empty-state-icon icon-inbox"></div>
             <div class="empty-state-title">No records found</div>
             <div class="empty-state-desc">Your attendance records will appear here once your teacher marks them.</div>
           </div>
